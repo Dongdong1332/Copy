@@ -88,6 +88,38 @@
      background-color: #3e8e41;
    }
    
+   .delete-button {
+      color: #ff6b6b;
+      border: none;
+      background-color: transparent;
+      font-size: 1rem;
+      cursor: pointer;
+   }
+
+   .delete-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 30px;
+      height: 30px;
+      border: 2px solid #ff6347;
+      border-radius: 30%;
+      font-size: 20px;
+      font-weight: bold;
+      color: #ff6347;
+      background-color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+   }
+
+   .delete-btn:hover {
+      color: white;
+      background-color: #ff6347;
+   }
+
 
    .title {
      font-size: 32px;
@@ -190,7 +222,7 @@
      .data-container button {
          display: block;
          width: 100%;
-         margin-top: 10px;
+         margin-top: 20px;
          margin-bottom: 20px;
      }
      .input-group {
@@ -218,7 +250,7 @@
 </head>
 <body>
    <div id="app">
-      <h2 class="title">Copy and Paste</h2>
+      <h2 class="title">Copy and paste ({{ formattedItems.length }})</h2>
       <form @submit.prevent="addItem" class="input-group">
         <textarea v-model="newItem" placeholder="想要紀錄什麼文字都可以..."></textarea>
         <button type="submit">Save</button>
@@ -230,6 +262,7 @@
               <div class="index">{{ index + 1 }}</div>
               <textarea class="data" readonly>{{ item.data }}</textarea>
               <button @click="copyToClipboard(item.data)">Copy</button>
+              <div class="delete-btn" @click="removeItem(index)">X</div>
             </div>
             <span class="timestamp">{{ item.formattedTime }}</span>
           </li>
@@ -242,10 +275,12 @@
     </footer>
     
   <script>
+   
       var HisData = {"list":[]}
       const API_URL = "https://script.google.com/macros/s/AKfycbw1O2UIxEaCnBDvzkq3l4yZrGLZwsnJ6IxCjRgdC5SXMEBsiW1XIdiHQ5vrlK2c1USSXw/exec"
       const SD_API = API_URL + "?Fun=SD&In=";
       const GD_API = API_URL + "?Fun=GD"
+      const Delete_API = API_URL + "?Fun=Delete&In="
       // fetch(SD_API+"456789");
 
       var app = new Vue({
@@ -258,6 +293,63 @@
             transitionName: 'fade'
          },
          created() {
+            /*this.items = {
+    "list": [
+        {
+            "time": "Tue Apr 18 2023 17:55:39 GMT+0800 (台北標準時間)",
+            "data": "TEST_GET_DATA"
+        },
+        {
+            "time": "Tue Apr 18 2023 17:15:42 GMT+0800 (台北標準時間)",
+            "data": "https://www.canva.com/design/DAFfY8v-Enk/iiBWLQAfiwA9e99kGJQDHQ/edit?utm_content=DAFfY8v-Enk&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton"
+        },
+        {
+            "time": "Tue Apr 18 2023 17:14:25 GMT+0800 (台北標準時間)",
+            "data": "TEST_GET_DATA"
+        },
+        {
+            "time": "Tue Apr 18 2023 17:00:04 GMT+0800 (台北標準時間)",
+            "data": "TEST"
+        },
+        {
+            "time": "Tue Apr 18 2023 16:57:28 GMT+0800 (台北標準時間)",
+            "data": "newItemAnimated"
+        },
+        {
+            "time": "Tue Apr 18 2023 16:56:50 GMT+0800 (台北標準時間)",
+            "data": "// 0.5 秒後移除動畫狀態\r\n  setTimeout(() => {\r\n    this.newItemAnimated = false;\r\n  }, 500);"
+        },
+        {
+            "time": "Tue Apr 18 2023 16:53:05 GMT+0800 (台北標準時間)",
+            "data": ".fade-enter-active,\r\n.fade-leave-active {\r\n  transition: opacity 0.5s ease-in-out;\r\n}\r\n\r\n.fade-enter,\r\n.fade-leave-to {\r\n  opacity: 0;\r\n}\r\n"
+        },
+        {
+            "time": "Tue Apr 18 2023 15:56:58 GMT+0800 (台北標準時間)",
+            "data": "   @media only screen and (max-width: 480px) {\r\n     li {\r\n       font-size: 16px;\r\n     }\r\n \r\n     button[type=\"submit\"] {\r\n       width: auto;\r\n     }\r\n   }"
+        },
+        {
+            "time": "Tue Apr 18 2023 15:56:46 GMT+0800 (台北標準時間)",
+            "data": "TEST Add"
+        },
+        {
+            "time": "Tue Apr 18 2023 13:40:56 GMT+0800 (台北標準時間)",
+            "data": "你覺得呢好喜歡咚咚(˶‾᷄ ⁻̫ ‾᷅˵)"
+        },
+        {
+            "time": "Tue Apr 18 2023 13:33:42 GMT+0800 (台北標準時間)",
+            "data": "TEST 123"
+        },
+        {
+            "time": "Tue Apr 18 2023 13:31:22 GMT+0800 (台北標準時間)",
+            "data": "GitHub Pages"
+        },
+        {
+            "time": "Mon Apr 17 2023 22:18:44 GMT+0800 (台北標準時間)",
+            "data": "TERST"
+        }
+    ]
+}.list
+*/            
             fetch(GD_API).then((response) => {
                response.json().then(data => {
                   this.items = data.list;
@@ -313,8 +405,12 @@
                el.select();
                document.execCommand('copy');
                document.body.removeChild(el);
+            },
+            removeItem(index) {
+               this.items.splice(index, 1);
+               fetch(url = Delete_API + index);
+               console.log(Delete_API + index);
             }
-            
          },
          mounted: function() {
             var self = this;
