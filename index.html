@@ -86,6 +86,7 @@
    button[type="submit"]:hover {
      background-color: #3e8e41;
    }
+   
 
    .title {
      font-size: 32px;
@@ -126,6 +127,21 @@
       margin-top: 20px;
       margin-bottom: 10px;
    }
+
+   .data-container button {
+      background-color: #4CAF50; /* Green */
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+      border-radius: 5px;
+   }
+
    li .index {
       position: absolute;
       top: 10px;
@@ -172,15 +188,15 @@
    <div id="app">
       <h2 class="title">Copy and paste</h2>
       <form @submit.prevent="addItem">
-        <textarea v-model="newItem" placeholder="輸入文字..."></textarea>
-        <!-- <input type="text" v-model="newItem" placeholder="輸入文字..."> -->
-        <button type="submit">送出</button>
+        <textarea v-model="newItem" placeholder="想要紀錄什麼文字都可以..."></textarea>
+        <button type="submit">儲存</button>
       </form>
       <ul>
          <li v-for="(item, index) in formattedItems" :key="index">
            <div class="data-container">
              <div class="index">{{ index+1 }}</div>
              <textarea class="data" readonly>{{ item.data }}</textarea>
+             <button @click="copyToClipboard(item.data)">複製</button>
            </div>
            <span class="timestamp">{{ item.formattedTime }}</span>
          </li>
@@ -244,8 +260,28 @@
                   fetch(url = SD_API + encodedParams);
                   this.newItem = '';
                }
+            },
+            copyToClipboard(text) {
+               const el = document.createElement('textarea');
+               el.value = text;
+               document.body.appendChild(el);
+               el.select();
+               document.execCommand('copy');
+               document.body.removeChild(el);
             }
             
+         },
+         mounted: function() {
+            var self = this;
+            // 從剪貼簿讀取文字
+            navigator.clipboard.readText()
+               .then(function(text) {
+               // 將文字存到Vue data中
+               self.newItem = text;
+               })
+               .catch(function(err) {
+               console.error('Failed to read clipboard contents: ', err);
+               });
          }
       });
       
