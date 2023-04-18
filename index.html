@@ -171,6 +171,16 @@
       border-top: 1px solid #ddd;
    }
 
+   @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+   }
+
+   .fade-in {
+      animation: fadeIn 0.5s ease-in-out;
+   }
+
+
  
    /* Define styles for different screen sizes */
    @media only screen and (max-width: 768px) {
@@ -208,22 +218,25 @@
 </head>
 <body>
    <div id="app">
-      <h2 class="title">Copy and paste</h2>
+      <h2 class="title">Copy and Paste</h2>
       <form @submit.prevent="addItem" class="input-group">
         <textarea v-model="newItem" placeholder="想要紀錄什麼文字都可以..."></textarea>
         <button type="submit">Save</button>
       </form>
       <ul>
-         <li v-for="(item, index) in formattedItems" :key="index">
-           <div class="data-container">
-             <div class="index">{{ index+1 }}</div>
-             <textarea class="data" readonly>{{ item.data }}</textarea>
-             <button @click="copyToClipboard(item.data)">Copy</button>
-           </div>
-           <span class="timestamp">{{ item.formattedTime }}</span>
-         </li>
-       </ul>
+        <transition-group name="fade-in" tag="div">
+         <li v-for="(item, index) in formattedItems" :key="index" :class="{ 'fade-in': newItemAnimated }">
+            <div class="data-container">
+              <div class="index">{{ index + 1 }}</div>
+              <textarea class="data" readonly>{{ item.data }}</textarea>
+              <button @click="copyToClipboard(item.data)">Copy</button>
+            </div>
+            <span class="timestamp">{{ item.formattedTime }}</span>
+          </li>
+        </transition-group>
+      </ul>
     </div>
+    
     <footer>
       &copy; 2023 Dong dong (Ming). All rights reserved.
     </footer>
@@ -240,7 +253,9 @@
          data: {
             items: HisData.list,
             formattedTime: '',
-            newItem: ''
+            newItem: '',
+            newItemAnimated: true,
+            transitionName: 'fade'
          },
          created() {
             fetch(GD_API).then((response) => {
@@ -283,7 +298,12 @@
                   const encodedParams = encodeURIComponent(this.newItem);
                   console.log(url = SD_API + encodedParams);
                   fetch(url = SD_API + encodedParams);
+                  this.newItemAnimated = true; // 新增狀態
                   this.newItem = '';
+                  // 0.5 秒後移除動畫狀態
+                  setTimeout(() => {
+                     this.newItemAnimated = false;
+                  }, 500);
                }
             },
             copyToClipboard(text) {
