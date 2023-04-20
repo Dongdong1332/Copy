@@ -4,8 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="./source/icon.png">
+  <!-- CDN Vue -->
   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/vue/2.5.2/vue.min.js"></script>
 
+   <!-- CDNJS :: Sortable (https://cdnjs.com/) -->
+   <!-- <script src="//cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script> -->
+   <!-- CDNJS :: Vue.Draggable (https://cdnjs.com/) -->
+   <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script> -->
+
+  
   <title>Copy and paste</title>
   <style>
    body {
@@ -203,17 +211,17 @@
       border-top: 1px solid #ddd;
    }
 
-
+   /* 新增/刪除 動畫 */
    .list-enter-active, .list-leave-active {
-      transition: all 0.9s;
+      transition: all 0.8s;
    }
    .list-enter {
       opacity: 0;
-      transform: translateY(-30px);
+      transform: translateY(-120px);
    }
    .list-leave-to {
       opacity: 0;
-      transform: translateX(30px);
+      transform: translateX(120px);
    }
 
 
@@ -259,17 +267,19 @@
         <textarea v-model="newItem" placeholder="想要紀錄什麼文字都可以..."></textarea>
         <button type="submit">Save</button>
       </form>
-      <transition-group tag="ul" name="list">
-         <li v-for="(item, index) in formattedItems" :key="formattedItems.length - index">
-            <div class="data-container">
-              <div class="index">{{ formattedItems.length - index }}</div>
-              <textarea class="data" readonly>{{ item.data }}</textarea>
-              <button @click="copyToClipboard(item.data)">Copy</button>
-              <div class="delete-btn" @click="removeItem(index)">X</div>
-            </div>
-            <span class="timestamp">{{ item.formattedTime }}</span>
-          </li>
-       </transition-group>
+      <!-- <draggable v-model="items" @update="MoveItem"> -->
+         <transition-group tag="ul" name="list">
+            <li v-for="(item, index) in formattedItems" :key="item.formattedTime">
+               <div class="data-container">
+               <div class="index">{{ formattedItems.length - index }}</div>
+               <textarea class="data" readonly>{{ item.data }}</textarea>
+               <button @click="copyToClipboard(item.data)">Copy</button>
+               <div class="delete-btn" @click="removeItem(index)">X</div>
+               </div>
+               <span class="timestamp">{{ item.formattedTime }}</span>
+            </li>
+         </transition-group>
+      <!-- </draggable> -->
     </div>
     
     <footer>
@@ -283,6 +293,7 @@
       const SD_API = API_URL + "?Fun=SD&In=";
       const GD_API = API_URL + "?Fun=GD"
       const Delete_API = API_URL + "?Fun=Delete&In="
+      const Move_API = API_URL + "?Fun=Move&In="
       // fetch(SD_API+"456789");
 
       var app = new Vue({
@@ -351,9 +362,7 @@
         }
     ]
 }.list
-            
-
-             */
+            */
             fetch(GD_API).then((response) => {
                response.json().then(data => {
                   this.items = data.list;
@@ -416,6 +425,13 @@
                fetch(url = Delete_API + index);
                console.log(Delete_API + index);
             }
+            // ,MoveItem(event) {
+            //    /* API有很多問題待解決*/
+            //    // console.log(event);
+            //    console.log(`Moved element from index ${event.oldIndex} to ${event.newIndex}`);
+            //    console.log(Move_API + event.oldIndex + "-" + event.newIndex);
+            //    // fetch(url = Move_API + event.oldIndex + "-" + event.newIndex);
+            // }
          },
          mounted: function() {
             var self = this;
@@ -430,8 +446,6 @@
                });
          }
       });
-      
-
   </script>
 </body>
 </html>
