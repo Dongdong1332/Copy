@@ -203,13 +203,17 @@
       border-top: 1px solid #ddd;
    }
 
-   @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-   }
 
-   .fade-in {
-      animation: fadeIn 0.5s ease-in-out;
+   .list-enter-active, .list-leave-active {
+      transition: all 0.9s;
+   }
+   .list-enter {
+      opacity: 0;
+      transform: translateY(-30px);
+   }
+   .list-leave-to {
+      opacity: 0;
+      transform: translateX(30px);
    }
 
 
@@ -255,19 +259,17 @@
         <textarea v-model="newItem" placeholder="想要紀錄什麼文字都可以..."></textarea>
         <button type="submit">Save</button>
       </form>
-      <ul>
-        <transition-group name="fade-in" tag="div">
-         <li v-for="(item, index) in formattedItems" :key="index" :class="{ 'fade-in': newItemAnimated }">
+      <transition-group tag="ul" name="list">
+         <li v-for="(item, index) in formattedItems" :key="formattedItems.length - index">
             <div class="data-container">
-              <div class="index">{{ index + 1 }}</div>
+              <div class="index">{{ formattedItems.length - index }}</div>
               <textarea class="data" readonly>{{ item.data }}</textarea>
               <button @click="copyToClipboard(item.data)">Copy</button>
               <div class="delete-btn" @click="removeItem(index)">X</div>
             </div>
             <span class="timestamp">{{ item.formattedTime }}</span>
           </li>
-        </transition-group>
-      </ul>
+       </transition-group>
     </div>
     
     <footer>
@@ -349,7 +351,9 @@
         }
     ]
 }.list
-*/            
+            
+
+             */
             fetch(GD_API).then((response) => {
                response.json().then(data => {
                   this.items = data.list;
@@ -384,6 +388,7 @@
                if (this.newItem !== '') {
                   var now = new Date();
                   var formattedTime = now.toLocaleString('zh-TW', { timeZone: 'Asia/Taipei', hour12: false });
+                  // push or unshift
                   this.items.unshift({time: formattedTime, data: this.newItem});
                   console.log(this.newItem);
                   // 使用 encodeURIComponent 對 params 進行編碼
