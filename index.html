@@ -74,6 +74,28 @@
       background-color: #e5e5e5;
       height: 150px;
    }
+
+   /* 複製按鈕動畫 */
+   @keyframes copied {
+   0% {
+      transform: scale(1);
+   }
+   50% {
+      transform: scale(1.2);
+   }
+   100% {
+      transform: scale(1);
+   }
+   }
+
+   .copied {
+      animation: copied 0.5s;
+   }
+
+   .disabled {
+   background-color: #ccc !important; /* 灰色 */
+   pointer-events: none; /* 防止重複點擊 */
+   }
  
    button[type="submit"] {
      width: 120px;
@@ -310,13 +332,13 @@
       <transition-group tag="ul" name="list">
          <li v-for="(item, index) in formattedItems" :key="item.formattedTime">
             <div class="data-container">
-            <div class="index">{{ formattedItems.length - index }}</div>
-            <textarea class="data" readonly>{{ item.data }}</textarea>
-            <button @click="copyToClipboard(item.data)">Copy</button>
-            <div class="delete-btn" @click="removeItem(index)">X</div>
+              <div class="index">{{ formattedItems.length - index }}</div>
+              <textarea class="data" readonly>{{ item.data }}</textarea>
+              <button @click="copyToClipboard(item.data, index)" :class="{ 'disabled': buttonStates[index] }">{{ buttonStates[index] ? 'Copied' : 'Copy' }}</button>
+              <div class="delete-btn" @click="removeItem(index)">X</div>
             </div>
             <span class="timestamp">{{ item.formattedTime }}</span>
-         </li>
+          </li>
       </transition-group>
    </div>
    
@@ -343,6 +365,9 @@
             newItem: '',
             newItemAnimated: true,
             transitionName: 'fade',
+            disabled: false,
+            buttonText: 'Copy',
+            buttonStates: [],
             isLoading: true // 控制是否顯示 loading 動畫
          },
          created() {
@@ -413,6 +438,8 @@
                console.log(`Error: ${error}`);
                this.isLoading = false; // 發生錯誤，隱藏 loading 動畫
             })
+            this.buttonStates = this.formattedItems.map(() => false);
+
          },
          computed: {
             formattedItems() {
@@ -423,6 +450,14 @@
             }
          },
          methods: {
+            disableButton() {
+               this.disabled = true;
+               this.buttonText = 'Copied';
+               setTimeout(() => {
+                  this.disabled = false;
+                  this.buttonText = 'Copy';
+               }, 5000);
+            },
             formatTime(time) {
                const date = new Date(time);
                const options = { 
@@ -454,13 +489,19 @@
                   }, 500);
                }
             },
-            copyToClipboard(text) {
-               const el = document.createElement('textarea');
-               el.value = text;
-               document.body.appendChild(el);
-               el.select();
-               document.execCommand('copy');
-               document.body.removeChild(el);
+            copyToClipboard(text, index) {
+            const el = document.createElement('textarea');
+            el.value = text;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            // 更新對應按鈕的狀態
+            this.$set(this.buttonStates, index, true);
+            setTimeout(() => {
+               this.$set(this.buttonStates, index, false);
+            }, 2300);
             },
             removeItem(index) {
                this.items.splice(index, 1);
