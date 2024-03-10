@@ -79,6 +79,60 @@
          height: 150px;
       }
 
+      .group-filter {
+         position: relative;
+         display: flex;
+         /* flex-direction: column; */
+         align-items: center;
+         margin: 0 10px;
+         cursor: pointer;
+         justify-content: center;
+         align-items: center;
+         margin-top: auto;
+         margin-bottom: 20px;
+      }
+      .group-indicator {
+         position: relative;
+         top: 10px;
+         right: 50px;
+         display: flex;
+         margin-right: 25px;
+      }
+      .group-text {
+         font-size: 14px;
+         font-family: "微軟正黑體";
+         font-weight: bold;
+         color: #333;
+      }
+
+      .normal-dot,   
+      .red-dot,
+      .yellow-dot,
+      .green-dot {
+         width: 20px;
+         height: 20px;
+         border-radius: 50%;
+         margin-right: 5px;
+      }
+
+      .normal-dot {
+         background-color: gray;
+      }
+
+      .red-dot {
+         background-color: red;
+      }
+
+      .yellow-dot {
+         background-color: yellow;
+      }
+
+      .green-dot {
+         background-color: green;
+      }
+
+
+
       /* 複製按鈕動畫 */
       @keyframes copied {
          0% {
@@ -151,35 +205,6 @@
          color: white;
          background-color: #ff6347;
       }
-
-      .group-indicator {
-         position: absolute;
-         top: 10px;
-         right: 50px;
-         display: flex;
-      }
-
-      .red-dot,
-      .yellow-dot,
-      .green-dot {
-         width: 10px;
-         height: 10px;
-         border-radius: 50%;
-         margin-right: 5px;
-      }
-
-      .red-dot {
-         background-color: red;
-      }
-
-      .yellow-dot {
-         background-color: yellow;
-      }
-
-      .green-dot {
-         background-color: green;
-      }
-
 
       .title {
          font-size: 32px;
@@ -380,9 +405,26 @@
          <div class="dot2"></div>
          <div class="dot3"></div>
       </div>
-
+      <div class="group-filter">
+         <div class="group-indicator" @click="selectedGroup = 0">
+            <div class="normal-dot"></div>
+            <div class="group-text" v-show="this.selectedGroup == 0">All</div>
+         </div>
+         <div class="group-indicator" @click="selectedGroup = 1">
+            <div class="red-dot"></div>
+            <div class="group-text" v-show="this.selectedGroup == 1">Red</div>
+         </div>
+         <div class="group-indicator" @click="selectedGroup = 2">
+            <div class="yellow-dot"></div>
+            <div class="group-text" v-show="this.selectedGroup == 2">Yellow</div>
+         </div>
+         <div class="group-indicator" @click="selectedGroup = 3">
+            <div class="green-dot"></div>
+            <div class="group-text" v-show="this.selectedGroup == 3">Green</div>
+         </div>
+      </div>
       <transition-group tag="ul" name="list">
-         <li v-for="(item, index) in formattedItems" :key="item.formattedTime">
+         <li v-for="(item, index) in formattedItems" :key="item.formattedTime" v-show="filterGroup(index)">
             <div class="data-container">
                <div class="index" :style="{ backgroundColor: getColor(Group_DB[index]) }" @click="toggleColor(index)">{{
                   formattedItems.length - index }}</div>
@@ -429,6 +471,7 @@
                2: '#ffffe6',
                3: '#e6ffee'
             },
+            selectedGroup: 0, // Default to the first group (0, 1, 2)
             isLoading: true // 控制是否顯示 loading 動畫
          },
          created() {
@@ -489,6 +532,7 @@
     ]
 }.list
             */
+            // this.isLoading = false; // 發生錯誤，隱藏 loading 動畫
 
             fetch(GD_API).then((response) => {
                response.json().then(data => {
@@ -509,7 +553,7 @@
                         this.Group_DB = paddedGG_API_data.slice().reverse();
 
                         console.log(this.Group_DB);
-                        this.isLoading = false; 
+                        this.isLoading = false;
 
                      })
                      .catch(error => {
@@ -593,14 +637,20 @@
             },
             toggleColor(index) {
                console.log(index);
-               console.log(parseInt(this.Group_DB[index],10));
-               this.$set(this.Group_DB, index, (this.Group_DB[index]+1)%4);
+               console.log(parseInt(this.Group_DB[index], 10));
+               this.$set(this.Group_DB, index, (this.Group_DB[index] + 1) % 4);
                console.log(this.Group_DB);
                // this.Group_DB[currentIndex] = (this.Group_DB[currentIndex]+1)%3;
                fetch(SG_API + `${this.items.length - index}-${this.Group_DB[index]}`);
             },
             getColor(value) {
                return this.colors[value] || '#ccc';
+            },
+            filterGroup(index) {
+               if (this.selectedGroup === 0) {
+                  return true; // Display all items when 'selectedGroup' is 0
+               }
+               return this.Group_DB[index] === this.selectedGroup;
             },
 
          },
