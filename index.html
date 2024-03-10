@@ -152,6 +152,34 @@
          background-color: #ff6347;
       }
 
+      .group-indicator {
+         position: absolute;
+         top: 10px;
+         right: 50px;
+         display: flex;
+      }
+
+      .red-dot,
+      .yellow-dot,
+      .green-dot {
+         width: 10px;
+         height: 10px;
+         border-radius: 50%;
+         margin-right: 5px;
+      }
+
+      .red-dot {
+         background-color: red;
+      }
+
+      .yellow-dot {
+         background-color: yellow;
+      }
+
+      .green-dot {
+         background-color: green;
+      }
+
 
       .title {
          font-size: 32px;
@@ -191,7 +219,7 @@
          border: 1px solid #ccc;
          box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.1);
          padding: 10px;
-         margin-top: 20px;
+         margin-top: 23px;
          margin-bottom: 10px;
       }
 
@@ -212,12 +240,13 @@
 
       li .index {
          position: absolute;
-         top: 10px;
-         left: 10px;
-         width: 30px;
-         height: 30px;
+         top: 5px;
+         left: 5px;
+         width: 40px;
+         height: 40px;
          border-radius: 50%;
-         margin-bottom: 5px;
+         border: 1.5px double #000;
+         margin-bottom: 6px;
          background-color: #ccc;
          display: flex;
          justify-content: center;
@@ -226,6 +255,8 @@
          font-weight: bold;
          font-size: 0.85em;
          text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+         box-shadow: 5px 2px 7px rgba(0, 0, 0, 0.5);
+
       }
 
       footer {
@@ -353,9 +384,10 @@
       <transition-group tag="ul" name="list">
          <li v-for="(item, index) in formattedItems" :key="item.formattedTime">
             <div class="data-container">
-               <div class="index">{{ formattedItems.length - index }}</div>
+               <div class="index" :style="{ backgroundColor: getColor(Group_DB[index]) }" @click="toggleColor(index)">{{
+                  formattedItems.length - index }}</div>
                <textarea class="data" readonly>{{ item.data }}</textarea>
-               <button @click="copyToClipboard(item.data, index)" :class="{ 'disabled': buttonStates[index] }">{{
+               <button @click="copyToClipboard(item.data)" :class="{ 'disabled': buttonStates[index] }">{{
                   buttonStates[index] ? 'Copied' : 'Copy' }}</button>
                <div class="delete-btn" @click="removeItem(index)">X</div>
             </div>
@@ -373,8 +405,10 @@
 
       var HisData = { "list": [] }
       const API_URL = "https://script.google.com/macros/s/AKfycbw1O2UIxEaCnBDvzkq3l4yZrGLZwsnJ6IxCjRgdC5SXMEBsiW1XIdiHQ5vrlK2c1USSXw/exec"
-      const SD_API = API_URL + "?Fun=SD&In=";
-      const GD_API = API_URL + "?Fun=GD"
+      const SD_API = API_URL + "?Fun=SD&In="; // Set Data
+      const GD_API = API_URL + "?Fun=GD" // Get Data
+      const SG_API = API_URL + "?Fun=SG&In=" //Set Group
+      const GG_API = API_URL + "?Fun=GG" //Get Group
       const Delete_API = API_URL + "?Fun=Delete&In="
       const Move_API = API_URL + "?Fun=Move&In="
       // fetch(SD_API+"456789");
@@ -389,8 +423,12 @@
             transitionName: 'fade',
             disabled: false,
             buttonText: 'Copy',
-            buttonStates: [],
-            colors: ['red', 'yellow', 'green', 'gray'],
+            Group_DB: [],
+            colors: {
+               1: '#ffcccc',
+               2: '#ffffe6',
+               3: '#e6ffee'
+            },
             isLoading: true // 控制是否顯示 loading 動畫
          },
          created() {
@@ -451,16 +489,38 @@
     ]
 }.list
             */
+
             fetch(GD_API).then((response) => {
                response.json().then(data => {
                   this.items = data.list;
                   console.log(data);
-                  this.isLoading = false; // 資料讀取完成，隱藏 loading 動畫
+                  fetch(GG_API)
+                     .then(response => response.json())
+                     .then(GG_API_data => {
+                        const itemsLength = this.items.length;
+                        const groupDBLength = GG_API_data.length;
+                        const maxLength = Math.max(itemsLength, groupDBLength);
+
+                        const paddedGG_API_data = [...GG_API_data];
+                        while (paddedGG_API_data.length < maxLength) {
+                           paddedGG_API_data.push(0);
+                        }
+
+                        this.Group_DB = paddedGG_API_data.slice().reverse();
+
+                        console.log(this.Group_DB);
+                        this.isLoading = false; 
+
+                     })
+                     .catch(error => {
+                        console.log(`Error: ${error}`);
+                     });
                })
             }).catch((error) => {
                console.log(`Error: ${error}`);
                this.isLoading = false; // 發生錯誤，隱藏 loading 動畫
             })
+
             this.buttonStates = this.formattedItems.map(() => false);
 
          },
@@ -530,7 +590,19 @@
                this.items.splice(index, 1);
                fetch(url = Delete_API + index);
                console.log(Delete_API + index);
-            }
+            },
+            toggleColor(index) {
+               console.log(index);
+               console.log(parseInt(this.Group_DB[index],10));
+               this.$set(this.Group_DB, index, (this.Group_DB[index]+1)%4);
+               console.log(this.Group_DB);
+               // this.Group_DB[currentIndex] = (this.Group_DB[currentIndex]+1)%3;
+               fetch(SG_API + `${this.items.length - index}-${this.Group_DB[index]}`);
+            },
+            getColor(value) {
+               return this.colors[value] || '#ccc';
+            },
+
          },
          mounted: function () {
             var self = this;
