@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +14,6 @@
          background-color: #f2f2f2;
          padding: 20px;
       }
-
       #app {
          max-width: 900px;
          margin: 0 auto;
@@ -24,14 +22,13 @@
          background-color: #ffffff;
          border-radius: 5px;
          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+         position: relative;
       }
-
       ul {
          list-style: none;
          margin: 0;
          padding: 0;
       }
-
       li {
          background-color: #f9f9f9;
          position: relative;
@@ -40,22 +37,17 @@
          border-radius: 5px;
          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
          display: flex;
-         /* 加上 flexbox */
          flex-direction: column;
-         /* 讓內容疊放 */
       }
-
       li:last-child {
          margin-bottom: 0;
       }
-
       form {
          display: flex;
          justify-content: center;
          align-items: center;
          margin-bottom: 20px;
       }
-
       textarea {
          display: block;
          width: 100%;
@@ -73,22 +65,17 @@
          box-sizing: border-box;
          margin-bottom: 5px;
       }
-
       li textarea {
          background-color: #e5e5e5;
          height: 150px;
       }
-
       .group-filter {
          position: relative;
          display: flex;
-         /* flex-direction: column; */
          align-items: center;
          margin: 0 10px;
          cursor: pointer;
          justify-content: center;
-         align-items: center;
-         margin-top: auto;
          margin-bottom: 20px;
       }
       .group-indicator {
@@ -104,62 +91,37 @@
          font-weight: bold;
          color: #333;
       }
-
-      .normal-dot,   
-      .red-dot,
-      .yellow-dot,
-      .green-dot {
+      .normal-dot, .red-dot, .yellow-dot, .green-dot {
          width: 20px;
          height: 20px;
          border: 1px solid gray;
          border-radius: 50%;
          margin-right: 5px;
       }
-
       .normal-dot {
          background-color: #e5e5e5;
       }
-
       .red-dot {
          background-color: #ffcccc;
       }
-
       .yellow-dot {
          background-color: #ffffe6;
       }
-
       .green-dot {
          background-color: #e6ffee;
       }
-
-
-
-      /* 複製按鈕動畫 */
       @keyframes copied {
-         0% {
-            transform: scale(1);
-         }
-
-         50% {
-            transform: scale(1.2);
-         }
-
-         100% {
-            transform: scale(1);
-         }
+         0% { transform: scale(1); }
+         50% { transform: scale(1.2); }
+         100% { transform: scale(1); }
       }
-
       .copied {
          animation: copied 0.5s;
       }
-
       .disabled {
          background-color: #ccc !important;
-         /* 灰色 */
          pointer-events: none;
-         /* 防止重複點擊 */
       }
-
       button[type="submit"] {
          width: 120px;
          background-color: #4CAF50;
@@ -170,11 +132,9 @@
          padding: 10px 20px;
          cursor: pointer;
       }
-
       button[type="submit"]:hover {
          background-color: #3e8e41;
       }
-
       .delete-button {
          color: #ff6b6b;
          border: none;
@@ -182,7 +142,6 @@
          font-size: 1rem;
          cursor: pointer;
       }
-
       .delete-btn {
          position: absolute;
          top: 10px;
@@ -201,12 +160,10 @@
          cursor: pointer;
          transition: all 0.3s ease;
       }
-
       .delete-btn:hover {
          color: white;
          background-color: #ff6347;
       }
-
       .title {
          font-size: 32px;
          font-weight: bold;
@@ -214,7 +171,6 @@
          text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
          margin-bottom: 20px;
       }
-
       .timestamp {
          font-size: 18px;
          color: #999;
@@ -225,14 +181,10 @@
          bottom: 15px;
          right: 20px;
       }
-
       .data-container {
          flex-grow: 1;
-         /* 占據剩餘空間 */
          min-height: 200px;
-         /* 最小高度為 100px */
       }
-
       .data {
          font-size: 20px;
          color: #333;
@@ -248,10 +200,8 @@
          margin-top: 23px;
          margin-bottom: 10px;
       }
-
       .data-container button {
          background-color: #4CAF50;
-         /* Green */
          border: none;
          color: white;
          padding: 10px 20px;
@@ -263,7 +213,6 @@
          cursor: pointer;
          border-radius: 5px;
       }
-
       li .index {
          position: absolute;
          top: 5px;
@@ -282,9 +231,7 @@
          font-size: 0.85em;
          text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
          box-shadow: 5px 2px 7px rgba(0, 0, 0, 0.5);
-
       }
-
       footer {
          text-align: center;
          font-size: 12px;
@@ -294,24 +241,17 @@
          background-color: #f2f2f2;
          border-top: 1px solid #ddd;
       }
-
-      /* 新增/刪除 動畫 */
-      .list-enter-active,
-      .list-leave-active {
+      .list-enter-active, .list-leave-active {
          transition: all 0.8s;
       }
-
       .list-enter {
          opacity: 0;
          transform: translateY(-120px);
       }
-
       .list-leave-to {
          opacity: 0;
          transform: translateX(120px);
       }
-
-      /* Loading */
       .loading {
          position: fixed;
          top: 0;
@@ -325,7 +265,6 @@
          font-size: large;
          background-color: rgba(255, 255, 255, 0.75);
       }
-
       .loading div {
          width: 12px;
          height: 12px;
@@ -334,65 +273,100 @@
          background-color: #000;
          animation: loading 1s ease-in-out infinite;
       }
-
-
       @keyframes loading {
          0% {
             opacity: 0.2;
             transform: scale(0.8);
          }
-
          50% {
             opacity: 1;
             transform: scale(1.2);
          }
-
          100% {
             opacity: 0.2;
             transform: scale(0.8);
          }
       }
-
-
-      /* Define styles for different screen sizes */
       @media only screen and (max-width: 768px) {
          #app {
             max-width: 90%;
          }
-
          .data-container button {
             display: block;
             width: 100%;
             margin-top: 20px;
             margin-bottom: 20px;
          }
-
          .input-group {
             flex-direction: column;
          }
-
          .input-group button[type="submit"] {
             margin-top: 10px;
             width: 100%;
          }
-
          .input-group textarea {
             margin-right: 0px;
          }
       }
-
       @media only screen and (max-width: 480px) {
          li {
             font-size: 16px;
          }
-
          button[type="submit"] {
             width: auto;
          }
       }
+      .copy-anim {
+         animation: buttonPop 0.5s ease;
+      }
+      @keyframes buttonPop {
+         0% { transform: scale(1); }
+         50% { transform: scale(1.2); }
+         100% { transform: scale(1); }
+      }
+      /* Toast fade transition */
+      .toast-fade-enter-active, .toast-fade-leave-active {
+         transition: opacity 0.5s;
+      }
+      .toast-fade-enter, .toast-fade-leave-to {
+         opacity: 0;
+      }
+      .toast {
+         position: absolute;
+         bottom: 10px;
+         left: 50%;
+         transform: translateX(-50%);
+         background-color: rgba(0, 0, 0, 0.8);
+         color: white;
+         padding: 10px 20px;
+         border-radius: 5px;
+         z-index: 9999;
+         opacity: 1;
+      }
+   
+      /* Transition for newly added/removed items */
+      .item-enter-active,
+      .item-leave-active {
+         transition: all 0.5s ease;
+      }
+      .item-enter {
+         opacity: 0;
+         transform: translateY(-20px) scale(0.9);
+      }
+      .item-enter-to {
+         opacity: 1;
+         transform: translateY(0) scale(1);
+      }
+      .item-leave {
+         opacity: 1;
+         transform: translateY(0) scale(1);
+      }
+      .item-leave-to {
+         opacity: 0;
+         transform: translateY(20px) scale(0.9);
+      }
    </style>
 </head>
-
 <body>
    <div id="app">
       <h2 class="title">Copy and paste ({{ formattedItems.length }})</h2>
@@ -409,52 +383,60 @@
       <div class="group-filter">
          <div class="group-indicator" @click="selectedGroup = 0">
             <div class="normal-dot"></div>
-            <div class="group-text" v-show="this.selectedGroup == 0">All</div>
+            <div class="group-text" v-show="selectedGroup == 0">All</div>
          </div>
          <div class="group-indicator" @click="selectedGroup = 1">
             <div class="red-dot"></div>
-            <div class="group-text" v-show="this.selectedGroup == 1">Red</div>
+            <div class="group-text" v-show="selectedGroup == 1">Red</div>
          </div>
          <div class="group-indicator" @click="selectedGroup = 2">
             <div class="yellow-dot"></div>
-            <div class="group-text" v-show="this.selectedGroup == 2">Yellow</div>
+            <div class="group-text" v-show="selectedGroup == 2">Yellow</div>
          </div>
          <div class="group-indicator" @click="selectedGroup = 3">
             <div class="green-dot"></div>
-            <div class="group-text" v-show="this.selectedGroup == 3">Green</div>
+            <div class="group-text" v-show="selectedGroup == 3">Green</div>
          </div>
       </div>
-      <transition-group tag="ul" name="list">
+
+      <transition-group tag="ul" name="item">
          <li v-for="(item, index) in formattedItems" :key="item.formattedTime" v-show="filterGroup(index)">
             <div class="data-container">
-               <div class="index" :style="{ backgroundColor: getColor(Group_DB[index]) }" @click="toggleColor(index)">{{
-                  formattedItems.length - index }}</div>
+               <div class="index" :style="{ backgroundColor: getColor(Group_DB[index]) }" @click="toggleColor(index)">
+                  {{ formattedItems.length - index }}
+               </div>
                <textarea class="data" readonly>{{ item.data }}</textarea>
-               <button @click="copyToClipboard(item.data)" :class="{ 'disabled': buttonStates[index] }">{{
-                  buttonStates[index] ? 'Copied' : 'Copy' }}</button>
+               <button @click="copyToClipboard(item.data, index)"
+                  :class="{ 'disabled': buttonStates[index], 'copy-anim': activeButtonIndex === index }">
+                  {{ buttonStates[index] ? 'Copied' : 'Copy' }}
+               </button>
                <div class="delete-btn" @click="removeItem(index)">X</div>
             </div>
             <span class="timestamp">{{ item.formattedTime }}</span>
          </li>
       </transition-group>
-   </div>
 
+      <!-- Animated Toast Notification -->
+      <transition name="toast-fade">
+         <div v-if="showToast" class="toast">
+            {{ toastMessage }}
+         </div>
+      </transition>
+   </div>
 
    <footer>
       &copy; 2023 Dong dong (Ming). All rights reserved.
    </footer>
 
    <script>
-
       var HisData = { "list": [] }
       const API_URL = "https://script.google.com/macros/s/AKfycbw1O2UIxEaCnBDvzkq3l4yZrGLZwsnJ6IxCjRgdC5SXMEBsiW1XIdiHQ5vrlK2c1USSXw/exec"
-      const SD_API = API_URL + "?Fun=SD&In="; // Set Data
-      const GD_API = API_URL + "?Fun=GD" // Get Data
-      const SG_API = API_URL + "?Fun=SG&In=" //Set Group
-      const GG_API = API_URL + "?Fun=GG" //Get Group
+      const SD_API = API_URL + "?Fun=SD&In=";
+      const GD_API = API_URL + "?Fun=GD"
+      const SG_API = API_URL + "?Fun=SG&In="
+      const GG_API = API_URL + "?Fun=GG"
       const Delete_API = API_URL + "?Fun=Delete&In="
       const Move_API = API_URL + "?Fun=Move&In="
-      // fetch(SD_API+"456789");
 
       var app = new Vue({
          el: '#app',
@@ -472,102 +454,38 @@
                2: '#ffffe6',
                3: '#e6ffee'
             },
-            selectedGroup: 0, // Default to the first group (0, 1, 2)
-            isLoading: true // 控制是否顯示 loading 動畫
+            selectedGroup: 0,
+            isLoading: true,
+            buttonStates: [],
+            toastMessage: '',
+            showToast: false,
+            activeButtonIndex: null
          },
          created() {
-            /*this.items = {
-    "list": [
-        {
-            "time": "Tue Apr 18 2023 17:55:39 GMT+0800 (台北標準時間)",
-            "data": "TEST_GET_DATA"
-        },
-        {
-            "time": "Tue Apr 18 2023 17:15:42 GMT+0800 (台北標準時間)",
-            "data": "https://www.canva.com/design/DAFfY8v-Enk/iiBWLQAfiwA9e99kGJQDHQ/edit?utm_content=DAFfY8v-Enk&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton"
-        },
-        {
-            "time": "Tue Apr 18 2023 17:14:25 GMT+0800 (台北標準時間)",
-            "data": "TEST_GET_DATA"
-        },
-        {
-            "time": "Tue Apr 18 2023 17:00:04 GMT+0800 (台北標準時間)",
-            "data": "TEST"
-        },
-        {
-            "time": "Tue Apr 18 2023 16:57:28 GMT+0800 (台北標準時間)",
-            "data": "newItemAnimated"
-        },
-        {
-            "time": "Tue Apr 18 2023 16:56:50 GMT+0800 (台北標準時間)",
-            "data": "// 0.5 秒後移除動畫狀態\r\n  setTimeout(() => {\r\n    this.newItemAnimated = false;\r\n  }, 500);"
-        },
-        {
-            "time": "Tue Apr 18 2023 16:53:05 GMT+0800 (台北標準時間)",
-            "data": ".fade-enter-active,\r\n.fade-leave-active {\r\n  transition: opacity 0.5s ease-in-out;\r\n}\r\n\r\n.fade-enter,\r\n.fade-leave-to {\r\n  opacity: 0;\r\n}\r\n"
-        },
-        {
-            "time": "Tue Apr 18 2023 15:56:58 GMT+0800 (台北標準時間)",
-            "data": "   @media only screen and (max-width: 480px) {\r\n     li {\r\n       font-size: 16px;\r\n     }\r\n \r\n     button[type=\"submit\"] {\r\n       width: auto;\r\n     }\r\n   }"
-        },
-        {
-            "time": "Tue Apr 18 2023 15:56:46 GMT+0800 (台北標準時間)",
-            "data": "TEST Add"
-        },
-        {
-            "time": "Tue Apr 18 2023 13:40:56 GMT+0800 (台北標準時間)",
-            "data": "你覺得呢好喜歡咚咚(˶‾᷄ ⁻̫ ‾᷅˵)"
-        },
-        {
-            "time": "Tue Apr 18 2023 13:33:42 GMT+0800 (台北標準時間)",
-            "data": "TEST 123"
-        },
-        {
-            "time": "Tue Apr 18 2023 13:31:22 GMT+0800 (台北標準時間)",
-            "data": "GitHub Pages"
-        },
-        {
-            "time": "Mon Apr 17 2023 22:18:44 GMT+0800 (台北標準時間)",
-            "data": "TERST"
-        }
-    ]
-}.list
-            */
-            // this.isLoading = false; // 發生錯誤，隱藏 loading 動畫
-
-            fetch(GD_API).then((response) => {
-               response.json().then(data => {
+            fetch(GD_API)
+               .then((response) => response.json())
+               .then(data => {
                   this.items = data.list;
-                  console.log(data);
-                  fetch(GG_API)
-                     .then(response => response.json())
-                     .then(GG_API_data => {
-                        const itemsLength = this.items.length;
-                        const groupDBLength = GG_API_data.length;
-                        const maxLength = Math.max(itemsLength, groupDBLength);
-
-                        const paddedGG_API_data = [...GG_API_data];
-                        while (paddedGG_API_data.length < maxLength) {
-                           paddedGG_API_data.push(0);
-                        }
-
-                        this.Group_DB = paddedGG_API_data.slice().reverse();
-
-                        console.log(this.Group_DB);
-                        this.isLoading = false;
-
-                     })
-                     .catch(error => {
-                        console.log(`Error: ${error}`);
-                     });
+                  return fetch(GG_API);
                })
-            }).catch((error) => {
-               console.log(`Error: ${error}`);
-               this.isLoading = false; // 發生錯誤，隱藏 loading 動畫
-            })
+               .then(response => response.json())
+               .then(GG_API_data => {
+                  const itemsLength = this.items.length;
+                  const groupDBLength = GG_API_data.length;
+                  const maxLength = Math.max(itemsLength, groupDBLength);
 
+                  const paddedGG_API_data = [...GG_API_data];
+                  while (paddedGG_API_data.length < maxLength) {
+                     paddedGG_API_data.push(0);
+                  }
+                  this.Group_DB = paddedGG_API_data;
+                  this.isLoading = false;
+               })
+               .catch(error => {
+                  console.log(`Error: ${error}`);
+                  this.isLoading = false;
+               });
             this.buttonStates = this.formattedItems.map(() => false);
-
          },
          computed: {
             formattedItems() {
@@ -598,20 +516,17 @@
                };
                return date.toLocaleString('zh-TW', options);
             },
-            addItem: function () {
+            addItem() {
                if (this.newItem !== '') {
                   var now = new Date();
                   var formattedTime = now.toLocaleString('zh-TW', { timeZone: 'Asia/Taipei', hour12: false });
-                  // push or unshift
                   this.items.unshift({ time: formattedTime, data: this.newItem });
-                  console.log(this.newItem);
-                  // 使用 encodeURIComponent 對 params 進行編碼
+                  // Ensure Group_DB remains in sync
+                  this.Group_DB.unshift(0);
                   const encodedParams = encodeURIComponent(this.newItem);
-                  console.log(url = SD_API + encodedParams);
-                  fetch(url = SD_API + encodedParams);
-                  this.newItemAnimated = true; // 新增狀態
+                  fetch(SD_API + encodedParams);
+                  this.newItemAnimated = true;
                   this.newItem = '';
-                  // 0.5 秒後移除動畫狀態
                   setTimeout(() => {
                      this.newItemAnimated = false;
                   }, 500);
@@ -625,50 +540,55 @@
                document.execCommand('copy');
                document.body.removeChild(el);
 
-               // 更新對應按鈕的狀態
+               this.toastMessage = '已複製到剪貼簿!';
+               this.showToast = true;
+               setTimeout(() => {
+                  this.showToast = false;
+               }, 2500);
+
                this.$set(this.buttonStates, index, true);
+               this.activeButtonIndex = index;
                setTimeout(() => {
                   this.$set(this.buttonStates, index, false);
+                  this.activeButtonIndex = null;
                }, 2300);
             },
             removeItem(index) {
                this.items.splice(index, 1);
-               fetch(url = Delete_API + index);
-               console.log(Delete_API + index);
+               // Remove the color group entry
+               this.Group_DB.splice(index, 1);
+               fetch(Delete_API + index);
             },
             toggleColor(index) {
-               console.log(index);
-               console.log(parseInt(this.Group_DB[index], 10));
+               // Ensure we have a default value
+               if (this.Group_DB[index] === undefined) {
+                  this.$set(this.Group_DB, index, 0);
+               }
                this.$set(this.Group_DB, index, (this.Group_DB[index] + 1) % 4);
-               console.log(this.Group_DB);
-               // this.Group_DB[currentIndex] = (this.Group_DB[currentIndex]+1)%3;
-               fetch(SG_API + `${this.items.length - index}-${this.Group_DB[index]}`);
+               const rowToUpdate = (this.items.length - 1 - index) + 3;
+               console.log(`Row to update: ${rowToUpdate}, New Group: ${this.Group_DB[index]}`);
+               fetch(SG_API + `${rowToUpdate}-${this.Group_DB[index]}`);
             },
             getColor(value) {
                return this.colors[value] || '#ccc';
             },
             filterGroup(index) {
                if (this.selectedGroup === 0) {
-                  return true; // Display all items when 'selectedGroup' is 0
+                  return true;
                }
                return this.Group_DB[index] === this.selectedGroup;
-            },
-
+            }
          },
-         mounted: function () {
-            var self = this;
-            // 從剪貼簿讀取文字
+         mounted() {
             navigator.clipboard.readText()
-               .then(function (text) {
-                  // 將文字存到Vue data中
-                  self.newItem = text;
+               .then(text => {
+                  this.newItem = text;
                })
-               .catch(function (err) {
+               .catch(err => {
                   console.error('Failed to read clipboard contents: ', err);
                });
          }
       });
    </script>
 </body>
-
 </html>
