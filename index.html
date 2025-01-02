@@ -390,6 +390,25 @@
             width: auto;
          }
       }
+
+      /* Notification styles */
+      .notification {
+         position: fixed;
+         bottom: 20px;
+         left: 50%;
+         transform: translateX(-50%);
+         background-color: #4CAF50;
+         color: white;
+         padding: 10px 20px;
+         border-radius: 5px;
+         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+         opacity: 0;
+         transition: opacity 0.5s ease-in-out;
+      }
+
+      .notification.show {
+         opacity: 1;
+      }
    </style>
 </head>
 
@@ -430,7 +449,7 @@
                <div class="index" :style="{ backgroundColor: getColor(Group_DB[index]) }" @click="toggleColor(index)">{{
                   formattedItems.length - index }}</div>
                <textarea class="data" readonly>{{ item.data }}</textarea>
-               <button @click="copyToClipboard(item.data)" :class="{ 'disabled': buttonStates[index] }">{{
+               <button @click="copyToClipboard(item.data, index)" :class="{ 'disabled': buttonStates[index], 'copied': buttonStates[index] }">{{
                   buttonStates[index] ? 'Copied' : 'Copy' }}</button>
                <div class="delete-btn" @click="removeItem(index)">X</div>
             </div>
@@ -439,6 +458,7 @@
       </transition-group>
    </div>
 
+   <div class="notification" v-show="showNotification">Copied to clipboard!</div>
 
    <footer>
       &copy; 2023 Dong dong (Ming). All rights reserved.
@@ -473,7 +493,8 @@
                3: '#e6ffee'
             },
             selectedGroup: 0, // Default to the first group (0, 1, 2)
-            isLoading: true // 控制是否顯示 loading 動畫
+            isLoading: true, // 控制是否顯示 loading 動畫
+            showNotification: false // 控制是否顯示通知
          },
          created() {
             /*this.items = {
@@ -630,6 +651,12 @@
                setTimeout(() => {
                   this.$set(this.buttonStates, index, false);
                }, 2300);
+
+               // 顯示通知
+               this.showNotification = true;
+               setTimeout(() => {
+                  this.showNotification = false;
+               }, 3000);
             },
             removeItem(index) {
                this.items.splice(index, 1);
